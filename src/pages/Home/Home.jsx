@@ -5,7 +5,11 @@ import PagesItem from 'components/PagesItem/PagesItem';
 const HomeContent = () => {
   const [trend, setTrends] = useState([]);
   useEffect(() => {
-    fetchTrendsFilmAndAddToState(setTrends);
+    const fetch = async () => {
+      const data = await fetchTrendsFilmAndAddToState();
+      setTrends(data);
+    };
+    fetch();
   }, []);
 
   return (

@@ -3,12 +3,16 @@ import { useEffect, useState } from 'react';
 import { CastList } from './CastStyle';
 import { fetchMovieCastByIdAndAddToState } from 'components/services/fetchApi';
 import CastListItem from 'components/CastListItem/CastListItem';
-export const Cast = () => {
+const Cast = () => {
   const { movieId } = useParams();
   const [cast, setCast] = useState([]);
 
   useEffect(() => {
-    fetchMovieCastByIdAndAddToState(setCast, movieId);
+    const fetch = async () => {
+      const data = await fetchMovieCastByIdAndAddToState(movieId);
+      setCast(data);
+    };
+    fetch();
   }, [movieId]);
 
   return (
@@ -23,3 +27,4 @@ export const Cast = () => {
     </CastList>
   );
 };
+export default Cast;

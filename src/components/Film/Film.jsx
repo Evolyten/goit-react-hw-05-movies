@@ -8,6 +8,11 @@ import styled from 'styled-components';
 
 const NavSecond = styled(NavLink)`
   display: block;
+  color: black;
+
+  &.active {
+    color: red;
+  }
 `;
 
 const Film = () => {
@@ -16,7 +21,11 @@ const Film = () => {
   const location = useLocation();
 
   useEffect(() => {
-    fetchMovieByIdAndAddToState(setFilmInfo, movieId);
+    const fetch = async () => {
+      const data = await fetchMovieByIdAndAddToState(movieId);
+      setFilmInfo(data);
+    };
+    fetch();
   }, [movieId]);
 
   return (

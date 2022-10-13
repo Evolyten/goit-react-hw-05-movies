@@ -1,13 +1,13 @@
 import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from './Layout/Layout';
-import { Cast } from './Cast/Cast';
-import { Reviews } from './Reviews/Reviews';
 import { Toaster } from 'react-hot-toast';
 
 const HomeContent = lazy(() => import('../pages/Home/Home'));
 const MovieSearch = lazy(() => import('../pages/Movies/Movies'));
 const Film = lazy(() => import('./Film/Film'));
+const Cast = lazy(() => import('./Cast/Cast'));
+const Reviews = lazy(() => import('./Reviews/Reviews'));
 
 export const App = () => {
   return (

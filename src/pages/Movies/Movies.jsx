@@ -2,22 +2,48 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
 import { fetchMoviesByNameAndAddToState } from 'components/services/fetchApi';
+import { yupResolver } from '@hookform/resolvers/yup';
+import toast from 'react-hot-toast';
+
+import * as Yup from 'yup';
+const INPUT_NAME = 'name';
+
+const schema = Yup.object().shape({
+  name: Yup.string().required('Please enter your request'),
+});
 
 const MovieSearch = () => {
   const [films, setFils] = useState([]);
-  const { register, handleSubmit, reset, formState } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
   const location = useLocation();
   const [searchParam, setSearchParam] = useSearchParams();
 
   const filter = searchParam.get('filter');
 
   const changeFilter = value => {
-    setSearchParam({ filter: value['name'] });
+    if (!value[INPUT_NAME].trim()) return;
+    setSearchParam({ filter: value[INPUT_NAME].trim() });
   };
 
   useEffect(() => {
     if (!filter) return;
-    fetchMoviesByNameAndAddToState(setFils, filter);
+    const fetch = async () => {
+      const data = await fetchMoviesByNameAndAddToState(filter);
+      if (!data.length) {
+        toast.error(`In this ${filter} request no find`);
+        return;
+      }
+      setFils(data);
+    };
+    fetch();
   }, [filter]);
 
   useEffect(() => {
@@ -33,8 +59,9 @@ const MovieSearch = () => {
 
         <input
           onChange={e => changeFilter(e.target.value)}
-          {...register('name', { required: true })}
+          {...register(INPUT_NAME, { required: true })}
         />
+        <p>{errors.name?.message}</p>
       </form>
       <ul>
         {films.map(requestFilm => (

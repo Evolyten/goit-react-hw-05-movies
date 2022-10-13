@@ -2,13 +2,17 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchMovieReviewsByIdAndAddToState } from 'components/services/fetchApi';
 import ReviewsListItem from 'components/ReviewsListItem/ReviewsListItem';
-export const Reviews = () => {
+const Reviews = () => {
   const { movieId } = useParams();
 
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    fetchMovieReviewsByIdAndAddToState(setReviews, movieId);
+    const fetch = async () => {
+      const data = await fetchMovieReviewsByIdAndAddToState(movieId);
+      setReviews(data);
+    };
+    fetch();
   }, [movieId]);
 
   return (
@@ -23,3 +27,5 @@ export const Reviews = () => {
     </ul>
   );
 };
+
+export default Reviews;
